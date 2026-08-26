@@ -130,3 +130,51 @@ DATABASE_URL=postgres://app:app@localhost:5432/app npx node-pg-migrate down
 ```
 
 When running via Docker Compose the `migrate` service handles this automatically on startup.
+
+## Code mode
+
+This repository supports AI-assisted development through an orchestrator that can autonomously make code changes and open pull requests. Here's how a code job flows from request to completion:
+
+### Flow overview
+
+```
+Frontend UI → Orchestrator API → Sandbox Environment → Git Branch → Pull Request
+```
+
+1. **Request submission** — A user submits a coding task through the frontend interface (e.g., "Add a priority field to tasks")
+
+2. **Orchestrator receives job** — The orchestrator API receives the request and provisions an isolated sandbox environment with:
+   - A fresh clone of the repository
+   - A new working branch (e.g., `forge/code-<uuid>`)
+   - Access to development tools (node, npm, git, docker)
+
+3. **Autonomous execution** — Inside the sandbox, an AI agent:
+   - Reads relevant source files to understand the codebase
+   - Plans the changes across the appropriate tiers (database, API, frontend)
+   - Edits files using the complete new contents
+   - Runs tests or builds to verify the changes work
+   - Commits changes with descriptive messages
+
+4. **Pull request creation** — Once the changes are complete and verified:
+   - The working branch is pushed to the remote repository
+   - A pull request is opened against the base branch (typically `main`)
+   - The PR includes a description of what changed and how it was tested
+
+5. **Human review** — The pull request appears in GitHub for human review, where it can be:
+   - Reviewed for correctness and code quality
+   - Tested in a preview environment
+   - Merged, requested changes, or closed
+
+### Branch naming convention
+
+Code mode branches follow the pattern `forge/code-<uuid>`, which helps identify AI-generated changes and keeps them separate from human-created feature branches.
+
+### Safety and isolation
+
+Each code job runs in an isolated sandbox with:
+- No access to production systems or credentials
+- A time-limited execution window
+- Read-only access to the base branch
+- Write access only to its own working branch
+
+This ensures that automated code changes are always subject to human review before reaching production.
