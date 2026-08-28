@@ -172,3 +172,52 @@ The best way to verify the full stack is to:
    curl http://localhost:3001/health
    ```
    (Note: You may need to expose port 3001 in `docker-compose.yml` or exec into the web container to reach the API)
+
+## Testing notes 2
+
+### Running the test suite
+
+This project currently has limited automated testing. Here's how to run the available tests:
+
+#### Linting (Web Frontend)
+
+The web frontend uses ESLint for code quality checks. To run the linter:
+
+```bash
+cd src/web
+npm install  # Install dependencies if not already done
+npm run lint
+```
+
+This will check all TypeScript and JavaScript files in the web application for code quality issues and Next.js best practices.
+
+#### Unit Tests (API and Database)
+
+The API and database packages do not currently have unit tests configured. Running `npm test` in these directories will output:
+
+```bash
+# In src/api/
+cd src/api
+npm test  # Outputs: "Error: no test specified"
+
+# In src/db/
+cd src/db
+npm test  # Outputs: "Error: no test specified"
+```
+
+To add unit tests in the future, consider using Jest or Mocha with appropriate testing libraries for each component.
+
+#### Full Stack Verification
+
+The most comprehensive way to test the application is through integration testing with Docker Compose:
+
+```bash
+# Start the full stack
+docker compose up --build
+
+# In another terminal, verify the application is working
+curl http://localhost:3000  # Should return the Next.js frontend HTML
+curl http://localhost:3001/health  # May require port exposure or container exec
+```
+
+Then manually test the task management functionality through the web interface at [http://localhost:3000](http://localhost:3000).
