@@ -133,42 +133,20 @@ When running via Docker Compose the `migrate` service handles this automatically
 
 ## Testing notes
 
-### Linting
+### Running the test suite
 
-The web frontend includes ESLint for code quality checks:
-
+**Linting** (web frontend only):
 ```bash
 cd src/web
 npm run lint
 ```
 
-### Unit tests
+**Unit tests**: Currently no unit tests are configured. Running `npm test` in `src/api/` or `src/db/` will report "no test specified".
 
-Currently, no unit test suite is configured. The `npm test` command in both `src/api/` and `src/db/` will report "no test specified".
+**Integration testing**: Start the full stack and verify manually:
+```bash
+docker compose up --build
+# Open http://localhost:3000 and test task creation, updates, and persistence
+```
 
-To add tests in the future, consider:
-- **API**: Jest or Mocha with supertest for endpoint testing
-- **Web**: Jest with React Testing Library for component tests
-- **Database**: Integration tests against a test database
-
-### Integration testing
-
-The best way to verify the full stack is to:
-
-1. Start the application with Docker Compose:
-   ```bash
-   docker compose up --build
-   ```
-
-2. Open [http://localhost:3000](http://localhost:3000) and verify:
-   - The page loads successfully
-   - You can create new tasks
-   - Tasks persist after page refresh
-   - You can mark tasks as completed
-   - You can update task titles
-
-3. Check the API health endpoint:
-   ```bash
-   curl http://localhost:3001/health
-   ```
-   (Note: You may need to expose port 3001 in `docker-compose.yml` or exec into the web container to reach the API)
+To add automated tests in the future, consider Jest with supertest for API endpoints and React Testing Library for frontend components.
