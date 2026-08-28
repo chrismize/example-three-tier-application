@@ -130,3 +130,45 @@ DATABASE_URL=postgres://app:app@localhost:5432/app npx node-pg-migrate down
 ```
 
 When running via Docker Compose the `migrate` service handles this automatically on startup.
+
+## Testing notes
+
+### Linting
+
+The web frontend includes ESLint for code quality checks:
+
+```bash
+cd src/web
+npm run lint
+```
+
+### Unit tests
+
+Currently, no unit test suite is configured. The `npm test` command in both `src/api/` and `src/db/` will report "no test specified".
+
+To add tests in the future, consider:
+- **API**: Jest or Mocha with supertest for endpoint testing
+- **Web**: Jest with React Testing Library for component tests
+- **Database**: Integration tests against a test database
+
+### Integration testing
+
+The best way to verify the full stack is to:
+
+1. Start the application with Docker Compose:
+   ```bash
+   docker compose up --build
+   ```
+
+2. Open [http://localhost:3000](http://localhost:3000) and verify:
+   - The page loads successfully
+   - You can create new tasks
+   - Tasks persist after page refresh
+   - You can mark tasks as completed
+   - You can update task titles
+
+3. Check the API health endpoint:
+   ```bash
+   curl http://localhost:3001/health
+   ```
+   (Note: You may need to expose port 3001 in `docker-compose.yml` or exec into the web container to reach the API)
