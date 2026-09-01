@@ -172,3 +172,7 @@ The best way to verify the full stack is to:
    curl http://localhost:3001/health
    ```
    (Note: You may need to expose port 3001 in `docker-compose.yml` or exec into the web container to reach the API)
+
+## Testing
+
+This application is verified manually by running the Docker Compose stack and testing the task management functionality through the web interface.
